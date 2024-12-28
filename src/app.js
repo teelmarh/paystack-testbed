@@ -3,10 +3,12 @@ const express = require('express');
 const db = require('./config/db'); 
 const app = express();
 
+const paymentRoutes = require('./api/payments');
 
 // Middleware 
 app.use(express.json());
 
+app.use('/payments', paymentRoutes);
 
 
 // Error Handling Middleware
