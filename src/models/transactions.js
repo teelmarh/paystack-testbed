@@ -32,6 +32,13 @@ const Transaction = sequelize.define('Transaction', {
         type: DataTypes.ENUM('pending', 'completed', 'failed', 'cancelled'),
         defaultValue: 'pending'
     },
+    reference: { 
+        type: DataTypes.STRING, 
+        allowNull: false, 
+        unique: true 
+    },  
+    paid_at: { type: DataTypes.DATE }, 
+    amount: { type: DataTypes.DECIMAL(20, 2), allowNull: false }, 
     transaction_date: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW

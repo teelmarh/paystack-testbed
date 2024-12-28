@@ -16,23 +16,10 @@ async function syncDatabase() {
 }
 
 
-async function seedDatabase() {
-    try {
-        await sequelize.sync({ alter: true }); 
-
-        await require('./seeders/products'); 
-        await require('./seeders/users'); 
-
-        console.log('Database seeded!');
-    } catch (err) {
-        console.error('Error seeding database:', err);
-    }
-}
 
 async function initializeDatabase() {
     try {
-      await syncDatabase(); // Synchronize tables first
-      await seedDatabase(); // Then seed data
+      await syncDatabase(); 
     } catch (error) {
       console.error("Error initializing the database: ", error)
     }
