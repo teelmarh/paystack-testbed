@@ -24,23 +24,39 @@ router.post ( '/initialize', (req, res) => {
       }
     }
     
-    const paystackReq = https.request(options, paystackRes => {
-      let data = ''
-    
-      paystackRes.on('data', (chunk) => {
-        data += chunk
-      });
-    
-      paystackRes.on('end', () => {
-        console.log(JSON.parse(data))
-      })
-    }).on('error', error => {
-      console.error(error)
-    })
-    
-    paystackReq.write(params)
-    paystackReq.end()
+    try {
+        const paystackReq = https.request(options, paystackRes => {
+            let data = '';
 
+            paystackRes.on('data', chunk => {
+                data += chunk;
+            });
+
+            paystackRes.on('end', () => {
+                try {
+                    const paystackResponse = JSON.parse(data);
+                    console.log("Paystack Response:", paystackResponse);
+                    res.json(paystackResponse);
+                } catch (parseError) {
+                    console.error("Error parsing Paystack response:", parseError);
+                    res.status(500).json({ error: "Failed to parse Paystack response." });
+                }
+            });
+        });
+
+        paystackReq.on('error', error => {
+            console.error("Paystack Request Error:", error);
+            res.status(500).json({ error: "Failed to make Paystack request." });
+        });
+
+        paystackReq.write(params);
+        paystackReq.end();
+
+
+    } catch (error) {
+        console.error("Unexpected error during Paystack initialization:", error)
+        res.status(500).send("An unexpected error occurred.")
+    }
 });
 
 
